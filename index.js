@@ -12,9 +12,9 @@ app.listen(PORT, (error) => {
 });
 
 app.get("/", (req, res) => {
-  res.send("<h1>Hello Express!</h1>");
+  res.sendFile(__dirname + "/public/index.html");
 });
 
 app.get("/about", (req, res) => {
-  res.send("<h1>Ovo je stranica o nama!</h1>");
+  res.sendFile(__dirname + "/public/about.html");
 });
