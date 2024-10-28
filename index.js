@@ -1,6 +1,12 @@
 const express = require("express");
 const app = express();
 
+const users = [
+  { id: 0, ime: "Juraj", prezime: "Stern-Vukotic" },
+  { id: 1, ime: "Rajju", prezime: "Ticokuv" },
+  { id: 2, ime: "Jaruj", prezime: "Ernst" },
+];
+
 const PORT = 3000;
 
 app.listen(PORT, (error) => {
@@ -17,4 +23,8 @@ app.get("/", (req, res) => {
 
 app.get("/about", (req, res) => {
   res.sendFile(__dirname + "/public/about.html");
+});
+
+app.get("/users", (req, res) => {
+  res.json(users);
 });
