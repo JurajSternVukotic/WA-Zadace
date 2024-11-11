@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+app.use(express.json());
 const PORT = 3000;
 
 app.listen(PORT, (error) => {
@@ -118,6 +119,25 @@ app.get("/pregled/:id", (req, res) => {
 });
 
 // dodaj novu nekretninu
+app.post("/dodaj", (req, res) => {
+  const nova_nekretnina = req.body;
+  const potrebni_kljucevi = [
+    "id",
+    "naziv",
+    "opis",
+    "cijena",
+    "lokacija",
+    "br_soba",
+    "povrsina",
+  ];
+
+  if (!potrebni_kljucevi.every((key) => key in nova_nekretnina)) {
+    res.send("Niste poslali sve potrebne podatke za kreiranje nekretnine!");
+    return;
+  }
+  nekretnine.push(nova_nekretnina);
+  res.send(`Vaša nekretnina je uspješno kreirana!`);
+});
 
 // ažuriraj nekretninu potpuno
 
