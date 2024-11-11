@@ -105,6 +105,8 @@ let nekretnine = [
   },
 ];
 
+let ponude = [];
+
 // dohvati sve nekretnine
 app.get("/pregled", (req, res) => {
   res.json(nekretnine);
@@ -193,3 +195,22 @@ app.delete("/obrisi/:id", (req, res) => {
 });
 
 // pošalji novu ponudu
+app.post("/ponuda", (req, res) => {
+  const nova_ponuda = req.body;
+  const potrebni_kljucevi = [
+    "id",
+    "id_nekretnine",
+    "ime",
+    "prezime",
+    "ponuda",
+    "tel",
+  ];
+
+  if (!potrebni_kljucevi.every((key) => key in nova_ponuda)) {
+    res.send("Niste poslali sve potrebne podatke za kreiranje ponude!");
+    return;
+  }
+
+  ponude.push(nova_ponuda);
+  res.send("Vaša ponuda je uspješno kreirana!");
+});
