@@ -159,6 +159,23 @@ app.put("/promjeni/:id", (req, res) => {
 });
 
 // ažuriraj nekretninu djelomično
+app.patch("/promjeni/:id", (req, res) => {
+  const id_nekretnina = req.params.id;
+  const nova_nekretnina = req.body;
+
+  const index = nekretnine.findIndex(
+    (nekretnina) => nekretnina.id == id_nekretnina
+  );
+
+  if (index !== -1) {
+    for (const key in nova_nekretnina) {
+      nekretnine[index][key] = nova_nekretnina[key];
+    }
+    res.json(nekretnine[index]);
+  } else {
+    res.json({ message: "Nekretnina s traženim ID-em ne postoji." });
+  }
+});
 
 // obriši nekretninu
 app.delete("/obrisi/:id", (req, res) => {
