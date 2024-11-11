@@ -111,7 +111,7 @@ app.get("/pregled", (req, res) => {
 
 //dohvati nekretninu po ID-u
 app.get("/pregled/:id", (req, res) => {
-  let id_nekretnina = req.params.id;
+  const id_nekretnina = req.params.id;
   for (let nekretnina of nekretnine) {
     if (id_nekretnina == nekretnina.id) return res.json(nekretnina);
   }
@@ -124,5 +124,18 @@ app.get("/pregled/:id", (req, res) => {
 // ažuriraj nekretninu djelomično
 
 // obriši nekretninu
+app.delete("/obrisi/:id", (req, res) => {
+  const id_nekretnina = req.params.id;
+  const index = nekretnine.findIndex(
+    (nekretnina) => nekretnina.id == id_nekretnina
+  );
+
+  if (index !== -1) {
+    nekretnine.splice(index, 1);
+    res.json({ message: "Nekretnina uspješno obrisana." });
+  } else {
+    res.json({ message: "Nekretnina s traženim ID-em ne postoji." });
+  }
+});
 
 // pošalji novu ponudu
