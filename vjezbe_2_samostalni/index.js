@@ -246,12 +246,20 @@ app.post("/ponuda", (req, res) => {
   ];
 
   if (!potrebni_kljucevi.every((key) => key in nova_ponuda)) {
-    res.send("Niste poslali sve potrebne podatke za kreiranje ponude!");
+    res
+      .status(400)
+      .send("Niste poslali sve potrebne podatke za kreiranje ponude!");
     return;
   }
 
   if (isNaN(nova_ponuda.id) || isNaN(nova_ponuda.id_nekretnine)) {
     return res.status(400).send("ID i ID nekretnine moraju biti brojevi.");
+  }
+
+  if (
+    !nekretnine.some((nekretnina) => nekretnina.id == nova_ponuda.id_nekretnine)
+  ) {
+    return res.status(404).send("Nekretnina s traženim ID-em ne postoji.");
   }
 
   ponude.push(nova_ponuda);
