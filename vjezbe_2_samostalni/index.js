@@ -115,6 +115,11 @@ app.get("/pregled", (req, res) => {
 //dohvati nekretninu po ID-u
 app.get("/pregled/:id", (req, res) => {
   const id_nekretnina = req.params.id;
+
+  if (isNaN(id_nekretnina)) {
+    return res.status(400).json({ message: "ID mora biti broj." });
+  }
+
   for (let nekretnina of nekretnine) {
     if (id_nekretnina == nekretnina.id) return res.json(nekretnina);
   }
@@ -137,6 +142,9 @@ app.post("/dodaj", (req, res) => {
     res.send("Niste poslali sve potrebne podatke za kreiranje nekretnine!");
     return;
   }
+  if (isNaN(nova_nekretnina.id)) {
+    return res.status(400).send("ID mora biti broj.");
+  }
   nekretnine.push(nova_nekretnina);
   res.send(`Vaša nekretnina je uspješno kreirana!`);
 });
@@ -147,6 +155,10 @@ app.put("/promjeni/:id", (req, res) => {
   const nova_nekretnina = req.body;
 
   nova_nekretnina.id = id_nekretnina;
+
+  if (isNaN(nova_nekretnina.id)) {
+    return res.status(400).send("ID mora biti broj.");
+  }
 
   const index = nekretnine.findIndex(
     (nekretnina) => nekretnina.id == id_nekretnina
@@ -165,6 +177,10 @@ app.patch("/promjeni/:id", (req, res) => {
   const id_nekretnina = req.params.id;
   const nova_nekretnina = req.body;
 
+  if (isNaN(id_nekretnina)) {
+    return res.status(400).send("ID mora biti broj.");
+  }
+
   const index = nekretnine.findIndex(
     (nekretnina) => nekretnina.id == id_nekretnina
   );
@@ -182,6 +198,11 @@ app.patch("/promjeni/:id", (req, res) => {
 // obriši nekretninu
 app.delete("/obrisi/:id", (req, res) => {
   const id_nekretnina = req.params.id;
+
+  if (isNaN(id_nekretnina)) {
+    return res.status(400).json({ message: "ID mora biti broj." });
+  }
+
   const index = nekretnine.findIndex(
     (nekretnina) => nekretnina.id == id_nekretnina
   );
@@ -209,6 +230,10 @@ app.post("/ponuda", (req, res) => {
   if (!potrebni_kljucevi.every((key) => key in nova_ponuda)) {
     res.send("Niste poslali sve potrebne podatke za kreiranje ponude!");
     return;
+  }
+
+  if (isNaN(nova_ponuda.id) || isNaN(nova_ponuda.id_nekretnine)) {
+    return res.status(400).send("ID i ID nekretnine moraju biti brojevi.");
   }
 
   ponude.push(nova_ponuda);
