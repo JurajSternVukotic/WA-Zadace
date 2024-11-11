@@ -147,6 +147,15 @@ app.post("/dodaj", (req, res) => {
   if (isNaN(nova_nekretnina.id)) {
     return res.status(400).send("ID mora biti broj.");
   }
+  if (nova_nekretnina.cijena < 0) {
+    return res.status(400).send("Cijena ne može biti negativna.");
+  }
+  if (nova_nekretnina.br_soba < 0) {
+    return res.status(400).send("Broj soba ne može biti negativan.");
+  }
+  if (nova_nekretnina.povrsina <= 0) {
+    return res.status(400).send("Površina mora biti veća od nule.");
+  }
   nekretnine.push(nova_nekretnina);
   res.send(`Vaša nekretnina je uspješno kreirana!`);
 });
@@ -176,6 +185,16 @@ app.put("/promjeni/:id", (req, res) => {
 
   if (isNaN(nova_nekretnina.id)) {
     return res.status(400).send("ID mora biti broj.");
+  }
+
+  if (nova_nekretnina.cijena < 0) {
+    return res.status(400).send("Cijena ne može biti negativna.");
+  }
+  if (nova_nekretnina.br_soba < 0) {
+    return res.status(400).send("Broj soba ne može biti negativan.");
+  }
+  if (nova_nekretnina.povrsina <= 0) {
+    return res.status(400).send("Površina mora biti veća od nule.");
   }
 
   const index = nekretnine.findIndex(
@@ -260,6 +279,10 @@ app.post("/ponuda", (req, res) => {
     !nekretnine.some((nekretnina) => nekretnina.id == nova_ponuda.id_nekretnine)
   ) {
     return res.status(404).send("Nekretnina s traženim ID-em ne postoji.");
+  }
+
+  if (nova_nekretnina.ponuda < 0) {
+    return res.status(400).send("Ponuda ne može biti negativna.");
   }
 
   ponude.push(nova_ponuda);
