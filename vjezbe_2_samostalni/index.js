@@ -139,7 +139,9 @@ app.post("/dodaj", (req, res) => {
   ];
 
   if (!potrebni_kljucevi.every((key) => key in nova_nekretnina)) {
-    res.send("Niste poslali sve potrebne podatke za kreiranje nekretnine!");
+    res
+      .status(400)
+      .send("Niste poslali sve potrebne podatke za kreiranje nekretnine!");
     return;
   }
   if (isNaN(nova_nekretnina.id)) {
@@ -155,6 +157,22 @@ app.put("/promjeni/:id", (req, res) => {
   const nova_nekretnina = req.body;
 
   nova_nekretnina.id = id_nekretnina;
+
+  const potrebni_kljucevi = [
+    "id",
+    "naziv",
+    "opis",
+    "cijena",
+    "lokacija",
+    "br_soba",
+    "povrsina",
+  ];
+
+  if (!potrebni_kljucevi.every((key) => key in nova_nekretnina)) {
+    return res
+      .status(400)
+      .send("Niste poslali sve potrebne podatke za ažuriranje nekretnine!");
+  }
 
   if (isNaN(nova_nekretnina.id)) {
     return res.status(400).send("ID mora biti broj.");
