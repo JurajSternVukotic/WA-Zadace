@@ -103,3 +103,26 @@ let nekretnine = [
     povrsina: 150,
   },
 ];
+
+// dohvati sve nekretnine
+app.get("/pregled", (req, res) => {
+  res.json(nekretnine);
+});
+
+//dohvati nekretninu po ID-u
+app.get("/pregled/:id", (req, res) => {
+  let id_nekretnina = req.params.id;
+  for (let nekretnina of nekretnine) {
+    if (id_nekretnina == nekretnina.id) return res.json(nekretnina);
+  }
+});
+
+// dodaj novu nekretninu
+
+// ažuriraj nekretninu potpuno
+
+// ažuriraj nekretninu djelomično
+
+// obriši nekretninu
+
+// pošalji novu ponudu
