@@ -12,12 +12,32 @@ let proizvod = ref({
 });
 onMounted(async () => {
   try {
-    const response = await axios.get("http://localhost:3000/proizvodi/1");
+    const response = await axios.get("http://localhost:3000/proizvodi/5");
     proizvod.value = response.data;
   } catch (error) {
     console.error("Greška u dohvatu podataka: ", error);
   }
 });
+
+let podaci = ref({
+  naruceni_proizvodi: [
+    { id: 1, narucena_kolicina: 2 },
+    { id: 3, narucena_kolicina: 1 },
+  ],
+});
+
+const posaljiNarudzbu = async () => {
+  try {
+    let response = await axios.post(
+      "http://localhost:3000/narudzbe",
+      podaci.value
+    );
+    axios.post(url, data);
+    console.log(response);
+  } catch (error) {
+    console.error("Greška u dohvatu podataka: ", error);
+  }
+};
 </script>
 <template>
   <div class="bg-white">
@@ -181,7 +201,6 @@ flat."
 
               <fieldset aria-label="Choose a size" class="mt-4">
                 <div v-for="velicina in proizvod.velicine" :key="velicina">
-                  <!-- v-for direktiva za iscrtavanje veličina -->
                   <label
                     class="group relative flex cursor-pointer items-center justify-center rounded-md border bg-white px-4 py-3 text-sm font-medium uppercase text-gray-900 shadow-sm hover:bggray-50 focus:outline-none sm:flex-1 sm:py-6"
                   >
@@ -192,24 +211,20 @@ flat."
                       class="sr-only"
                     />
                     <span>{{ velicina }}</span>
-                    <!--
-Active: "border", Not Active: "border-2"
-Checked: "border-indigo-500", Not Checked: "border-transparent"
--->
                     <span
                       class="pointer-events-none absolute -inset-px rounded-md"
                       aria-hidden="true"
                     >
                     </span>
                   </label>
-                  <!-- Active: "ring-2 ring-indigo-500" -->
                 </div>
               </fieldset>
             </div>
 
             <button
               type="submit"
-              class="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              @click="posaljiNarudzbu"
+              class="mt-10 flex w-full items-center justify-center rounded-md border bordertransparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
             >
               Dodaj u košaricu
             </button>
