@@ -17,6 +17,8 @@ let proizvod = ref({
   velicine: [],
   opis: "",
   slike: [],
+  dostupne_boje: [],
+  karakteristike: {},
 });
 
 console.log(props.id);
@@ -147,61 +149,17 @@ flat."
 
           <form class="mt-10">
             <!-- Colors -->
-            <div>
-              <h3 class="text-sm font-medium text-gray-900">Boje</h3>
-
-              <fieldset aria-label="Choose a color" class="mt-4">
-                <div class="flex items-center space-x-3">
-                  <!-- Active and Checked: "ring ring-offset-1" -->
-                  <label
-                    aria-label="White"
-                    class="relative -m-0.5 flex cursor-pointer items-center justify-center rounded-full p-0.5 ring-gray-400 focus:outline-none"
-                  >
-                    <input
-                      type="radio"
-                      name="color-choice"
-                      value="White"
-                      class="sr-only"
-                    />
-                    <span
-                      aria-hidden="true"
-                      class="h-8 w-8 rounded-full border border-black border-opacity-10 bg-white"
-                    ></span>
-                  </label>
-                  <!-- Active and Checked: "ring ring-offset-1" -->
-                  <label
-                    aria-label="Gray"
-                    class="relative -m-0.5 flex cursor-pointer items-center justify-center rounded-full p-0.5 ring-gray-400 focus:outline-none"
-                  >
-                    <input
-                      type="radio"
-                      name="color-choice"
-                      value="Gray"
-                      class="sr-only"
-                    />
-                    <span
-                      aria-hidden="true"
-                      class="h-8 w-8 rounded-full border border-black border-opacity-10 bg-gray-200"
-                    ></span>
-                  </label>
-                  <!-- Active and Checked: "ring ring-offset-1" -->
-                  <label
-                    aria-label="Black"
-                    class="relative -m-0.5 flex cursor-pointer items-center justify-center rounded-full p-0.5 ring-gray-900 focus:outline-none"
-                  >
-                    <input
-                      type="radio"
-                      name="color-choice"
-                      value="Black"
-                      class="sr-only"
-                    />
-                    <span
-                      aria-hidden="true"
-                      class="h-8 w-8 rounded-full border border-black border-opacity-10 bg-gray-900"
-                    ></span>
-                  </label>
-                </div>
-              </fieldset>
+            <div class="mt-6">
+              <h3 class="text-sm font-medium text-gray-900">Dostupne Boje</h3>
+              <div class="mt-2 flex items-center space-x-3">
+                <span
+                  v-for="(boja, index) in proizvod.dostupne_boje"
+                  :key="index"
+                  class="h-6 w-6 rounded-full border border-gray-300"
+                  :style="{ backgroundColor: boja.toLowerCase() }"
+                  :title="boja"
+                ></span>
+              </div>
             </div>
 
             <!-- Sizes -->
@@ -258,34 +216,14 @@ flat."
 
           <div class="mt-10">
             <h3 class="text-sm font-medium text-gray-900">Karakteristike</h3>
-
-            <div class="mt-4">
-              <ul role="list" class="list-disc space-y-2 pl-4 text-sm">
-                <li class="text-gray-400">
-                  <span class="text-gray-600"
-                    >Sed ut perspiciatis unde omnis iste natus error sit
-                    voluptatem accusantium</span
-                  >
-                </li>
-                <li class="text-gray-400">
-                  <span class="text-gray-600"
-                    >doloremque laudantium, totam rem aperiam, eaque ipsa quae
-                    ab illo inventore veritatis et quasi architecto</span
-                  >
-                </li>
-                <li class="text-gray-400">
-                  <span class="text-gray-600"
-                    >beatae vitae dicta sunt explicabo</span
-                  >
-                </li>
-                <li class="text-gray-400">
-                  <span class="text-gray-600"
-                    >Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut
-                    odit aut fugit</span
-                  >
-                </li>
-              </ul>
-            </div>
+            <ul class="mt-2 list-disc list-inside text-sm text-gray-600">
+              <li
+                v-for="(vrijednost, kljuc) in proizvod.karakteristike"
+                :key="kljuc"
+              >
+                <strong>{{ kljuc }}:</strong> {{ vrijednost }}
+              </li>
+            </ul>
           </div>
 
           <div class="mt-10">
