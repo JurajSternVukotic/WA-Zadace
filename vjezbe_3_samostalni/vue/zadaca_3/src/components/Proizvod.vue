@@ -7,6 +7,8 @@ let proizvod = ref({
   naziv: "",
   cijena: 0,
   velicine: [],
+  opis: "",
+  slike: [],
 });
 onMounted(async () => {
   try {
@@ -56,28 +58,29 @@ onMounted(async () => {
 
       <!-- Image gallery -->
       <div
-        class="mx-auto mt-6 max-w-2xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:gap-x-8 lg:px-8"
+        class="mx-auto mt-6 max-w-2xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:gap-x8 lg:px-8"
       >
         <div
           class="aspect-h-4 aspect-w-3 hidden overflow-hidden rounded-lg lg:block"
         >
           <img
-            src="https://placehold.co/300x400"
-            alt="Two each of gray, white, and black shirts laying flat."
+            :src="proizvod.slike[0]"
+            alt="Two each of gray, white, and black shirts laying
+flat."
             class="h-full w-full object-cover object-center"
           />
         </div>
         <div class="hidden lg:grid lg:grid-cols-1 lg:gap-y-8">
           <div class="aspect-h-2 aspect-w-3 overflow-hidden rounded-lg">
             <img
-              src="https://placehold.co/600x300"
+              :src="proizvod.slike[3]"
               alt="illo inventore veritatis et quasi architecto beatae vitae"
               class="h-full w-full object-cover object-center"
             />
           </div>
           <div class="aspect-h-2 aspect-w-3 overflow-hidden rounded-lg">
             <img
-              src="https://placehold.co/400x400"
+              :src="proizvod.slike[2]"
               alt="accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab"
               class="h-full w-full object-cover object-center"
             />
@@ -85,7 +88,7 @@ onMounted(async () => {
         </div>
         <div class="aspect-h-2 aspect-w-3 overflow-hidden rounded-lg">
           <img
-            src="https://placehold.co/300x400"
+            :src="proizvod.slike[1]"
             alt="Sed ut perspiciatis unde omnis iste natus error sit voluptatem"
             class="h-full w-full object-cover object-center"
           />
@@ -222,13 +225,7 @@ Checked: "border-indigo-500", Not Checked: "border-transparent"
 
             <div class="space-y-6">
               <p class="text-base text-gray-900">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-                nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-                sunt in culpa qui officia deserunt mollit anim id est laborum.
+                {{ proizvod.opis }}
               </p>
             </div>
           </div>
