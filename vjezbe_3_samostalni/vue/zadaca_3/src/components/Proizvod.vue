@@ -1,4 +1,22 @@
 <!-- Proizvod.vue -->
+<script setup>
+import { ref, onMounted } from "vue";
+import axios from "axios";
+let proizvod = ref({
+  id: 0,
+  naziv: "",
+  cijena: 0,
+  velicine: [],
+});
+onMounted(async () => {
+  try {
+    const response = await axios.get("http://localhost:3000/proizvodi/1");
+    proizvod.value = response.data;
+  } catch (error) {
+    console.error("Greška u dohvatu podataka: ", error);
+  }
+});
+</script>
 <template>
   <div class="bg-white">
     <div class="pt-6">
@@ -30,7 +48,7 @@
               href="#"
               aria-current="page"
               class="font-medium text-gray-500 hover:text-gray-600"
-              >Naslov proizvoda</a
+              >{{ proizvod.naziv }}</a
             >
           </li>
         </ol>
@@ -82,14 +100,16 @@
           <h1
             class="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl"
           >
-            Naslov proizvoda
+            {{ proizvod.naziv }}
           </h1>
         </div>
 
         <!-- Options -->
         <div class="mt-4 lg:row-span-3 lg:mt-0">
           <h2 class="sr-only">Product information</h2>
-          <p class="text-3xl tracking-tight text-gray-900">100€</p>
+          <p class="text-3xl tracking-tight text-gray-900">
+            {{ proizvod.cijena }}€
+          </p>
 
           <form class="mt-10">
             <!-- Colors -->
@@ -157,181 +177,29 @@
               </div>
 
               <fieldset aria-label="Choose a size" class="mt-4">
-                <div
-                  class="grid grid-cols-4 gap-4 sm:grid-cols-8 lg:grid-cols-4"
-                >
-                  <!-- Active: "ring-2 ring-indigo-500" -->
+                <div v-for="velicina in proizvod.velicine" :key="velicina">
+                  <!-- v-for direktiva za iscrtavanje veličina -->
                   <label
-                    class="group relative flex cursor-not-allowed items-center justify-center rounded-md border bg-gray-50 px-4 py-3 text-sm font-medium uppercase text-gray-200 hover:bg-gray-50 focus:outline-none sm:flex-1 sm:py-6"
+                    class="group relative flex cursor-pointer items-center justify-center rounded-md border bg-white px-4 py-3 text-sm font-medium uppercase text-gray-900 shadow-sm hover:bggray-50 focus:outline-none sm:flex-1 sm:py-6"
                   >
                     <input
                       type="radio"
                       name="size-choice"
                       value="_"
-                      disabled
                       class="sr-only"
                     />
-                    <span>_</span>
+                    <span>{{ velicina }}</span>
+                    <!--
+Active: "border", Not Active: "border-2"
+Checked: "border-indigo-500", Not Checked: "border-transparent"
+-->
                     <span
+                      class="pointer-events-none absolute -inset-px rounded-md"
                       aria-hidden="true"
-                      class="pointer-events-none absolute -inset-px rounded-md border-2 border-gray-200"
                     >
-                      <svg
-                        class="absolute inset-0 h-full w-full stroke-2 text-gray-200"
-                        viewBox="0 0 100 100"
-                        preserveAspectRatio="none"
-                        stroke="currentColor"
-                      >
-                        <line
-                          x1="0"
-                          y1="100"
-                          x2="100"
-                          y2="0"
-                          vector-effect="non-scaling-stroke"
-                        />
-                      </svg>
                     </span>
                   </label>
                   <!-- Active: "ring-2 ring-indigo-500" -->
-                  <label
-                    class="group relative flex cursor-pointer items-center justify-center rounded-md border bg-white px-4 py-3 text-sm font-medium uppercase text-gray-900 shadow-sm hover:bg-gray-50 focus:outline-none sm:flex-1 sm:py-6"
-                  >
-                    <input
-                      type="radio"
-                      name="size-choice"
-                      value="_"
-                      class="sr-only"
-                    />
-                    <span>_</span>
-                    <!--
-                  Active: "border", Not Active: "border-2"
-                  Checked: "border-indigo-500", Not Checked: "border-transparent"
-                -->
-                    <span
-                      class="pointer-events-none absolute -inset-px rounded-md"
-                      aria-hidden="true"
-                    ></span>
-                  </label>
-                  <!-- Active: "ring-2 ring-indigo-500" -->
-                  <label
-                    class="group relative flex cursor-pointer items-center justify-center rounded-md border bg-white px-4 py-3 text-sm font-medium uppercase text-gray-900 shadow-sm hover:bg-gray-50 focus:outline-none sm:flex-1 sm:py-6"
-                  >
-                    <input
-                      type="radio"
-                      name="size-choice"
-                      value="S"
-                      class="sr-only"
-                    />
-                    <span>_</span>
-                    <!--
-                  Active: "border", Not Active: "border-2"
-                  Checked: "border-indigo-500", Not Checked: "border-transparent"
-                -->
-                    <span
-                      class="pointer-events-none absolute -inset-px rounded-md"
-                      aria-hidden="true"
-                    ></span>
-                  </label>
-                  <!-- Active: "ring-2 ring-indigo-500" -->
-                  <label
-                    class="group relative flex cursor-pointer items-center justify-center rounded-md border bg-white px-4 py-3 text-sm font-medium uppercase text-gray-900 shadow-sm hover:bg-gray-50 focus:outline-none sm:flex-1 sm:py-6"
-                  >
-                    <input
-                      type="radio"
-                      name="size-choice"
-                      value="_"
-                      class="sr-only"
-                    />
-                    <span>_</span>
-                    <!--
-                  Active: "border", Not Active: "border-2"
-                  Checked: "border-indigo-500", Not Checked: "border-transparent"
-                -->
-                    <span
-                      class="pointer-events-none absolute -inset-px rounded-md"
-                      aria-hidden="true"
-                    ></span>
-                  </label>
-                  <!-- Active: "ring-2 ring-indigo-500" -->
-                  <label
-                    class="group relative flex cursor-pointer items-center justify-center rounded-md border bg-white px-4 py-3 text-sm font-medium uppercase text-gray-900 shadow-sm hover:bg-gray-50 focus:outline-none sm:flex-1 sm:py-6"
-                  >
-                    <input
-                      type="radio"
-                      name="size-choice"
-                      value="_"
-                      class="sr-only"
-                    />
-                    <span>_</span>
-                    <!--
-                  Active: "border", Not Active: "border-2"
-                  Checked: "border-indigo-500", Not Checked: "border-transparent"
-                -->
-                    <span
-                      class="pointer-events-none absolute -inset-px rounded-md"
-                      aria-hidden="true"
-                    ></span>
-                  </label>
-                  <!-- Active: "ring-2 ring-indigo-500" -->
-                  <label
-                    class="group relative flex cursor-pointer items-center justify-center rounded-md border bg-white px-4 py-3 text-sm font-medium uppercase text-gray-900 shadow-sm hover:bg-gray-50 focus:outline-none sm:flex-1 sm:py-6"
-                  >
-                    <input
-                      type="radio"
-                      name="size-choice"
-                      value="_"
-                      class="sr-only"
-                    />
-                    <span>_</span>
-                    <!--
-                  Active: "border", Not Active: "border-2"
-                  Checked: "border-indigo-500", Not Checked: "border-transparent"
-                -->
-                    <span
-                      class="pointer-events-none absolute -inset-px rounded-md"
-                      aria-hidden="true"
-                    ></span>
-                  </label>
-                  <!-- Active: "ring-2 ring-indigo-500" -->
-                  <label
-                    class="group relative flex cursor-pointer items-center justify-center rounded-md border bg-white px-4 py-3 text-sm font-medium uppercase text-gray-900 shadow-sm hover:bg-gray-50 focus:outline-none sm:flex-1 sm:py-6"
-                  >
-                    <input
-                      type="radio"
-                      name="size-choice"
-                      value="_"
-                      class="sr-only"
-                    />
-                    <span>_</span>
-                    <!--
-                  Active: "border", Not Active: "border-2"
-                  Checked: "border-indigo-500", Not Checked: "border-transparent"
-                -->
-                    <span
-                      class="pointer-events-none absolute -inset-px rounded-md"
-                      aria-hidden="true"
-                    ></span>
-                  </label>
-                  <!-- Active: "ring-2 ring-indigo-500" -->
-                  <label
-                    class="group relative flex cursor-pointer items-center justify-center rounded-md border bg-white px-4 py-3 text-sm font-medium uppercase text-gray-900 shadow-sm hover:bg-gray-50 focus:outline-none sm:flex-1 sm:py-6"
-                  >
-                    <input
-                      type="radio"
-                      name="size-choice"
-                      value="_"
-                      class="sr-only"
-                    />
-                    <span>_</span>
-                    <!--
-                  Active: "border", Not Active: "border-2"
-                  Checked: "border-indigo-500", Not Checked: "border-transparent"
-                -->
-                    <span
-                      class="pointer-events-none absolute -inset-px rounded-md"
-                      aria-hidden="true"
-                    ></span>
-                  </label>
                 </div>
               </fieldset>
             </div>
