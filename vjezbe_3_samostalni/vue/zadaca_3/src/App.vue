@@ -1,9 +1,12 @@
 <template>
   <div>
     <!-- Uključujemo komponentu -->
-    <ProductView />
+    <router-view></router-view>
   </div>
 </template>
-<script setup>
-import ProductView from "./components/Proizvod.vue";
-</script>
+<script setup></script>
+<style>
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+</style>

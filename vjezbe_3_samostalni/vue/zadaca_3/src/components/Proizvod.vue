@@ -1,7 +1,15 @@
 <!-- Proizvod.vue -->
 <script setup>
 import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
 import axios from "axios";
+const props = defineProps({
+  id: {
+    type: String,
+  },
+});
+const router = useRouter();
+
 let proizvod = ref({
   id: 0,
   naziv: "",
@@ -10,9 +18,13 @@ let proizvod = ref({
   opis: "",
   slike: [],
 });
+
+console.log(props.id);
 onMounted(async () => {
   try {
-    const response = await axios.get("http://localhost:3000/proizvodi/5");
+    const response = await axios.get(
+      `http://localhost:3000/proizvodi/${props.id}`
+    );
     proizvod.value = response.data;
   } catch (error) {
     console.error("Greška u dohvatu podataka: ", error);
