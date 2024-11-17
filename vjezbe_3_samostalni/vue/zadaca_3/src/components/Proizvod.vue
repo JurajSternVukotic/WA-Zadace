@@ -32,7 +32,6 @@ const posaljiNarudzbu = async () => {
       "http://localhost:3000/narudzbe",
       podaci.value
     );
-    axios.post(url, data);
     console.log(response);
   } catch (error) {
     console.error("Greška u dohvatu podataka: ", error);
