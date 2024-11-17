@@ -1,5 +1,6 @@
 import express from "express";
 import proizvodiRouter from "./routes/proizvodi.js";
+import narudzbeRouter from "./routes/narudzbe.js";
 
 const app = express();
 
@@ -21,6 +22,4 @@ app.get("/", (req, res) => {
 
 app.use("/proizvodi", proizvodiRouter);
 
-app.post("/narudzba", (req, res) => {
-  res.send("Napravi novu narudžbu");
-});
+app.use("/narudzbe", narudzbeRouter);
