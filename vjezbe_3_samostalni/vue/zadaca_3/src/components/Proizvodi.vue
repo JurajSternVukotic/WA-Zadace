@@ -2,6 +2,17 @@
   <div class="container mx-auto px-4 py-8">
     <h1 class="text-3xl font-bold mb-6 text-center">Proizvodi</h1>
 
+    <div class="flex justify-end items-center mb-4">
+      <span class="mr-4"> Košarica: {{ cartCount }} proizvod(a) </span>
+      <button
+        @click="naručiProizvode()"
+        :disabled="cartCount === 0"
+        class="px-4 py-2 bg-green-600 text-white rounded disabled:bg-gray-400"
+      >
+        Naruči proizvode
+      </button>
+    </div>
+
     <div
       class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
     >
@@ -15,14 +26,14 @@
           <img
             v-if="proizvod.slike && proizvod.slike.length > 0"
             :src="proizvod.slike[0]"
-            alt="Proizvod slika"
+            :alt="proizvod.naziv"
             class="max-w-full max-h-full object-contain"
           />
           <div v-else class="text-gray-500">No Image Available</div>
         </div>
         <div class="p-4">
           <h2 class="text-xl font-semibold mb-2">{{ proizvod.naziv }}</h2>
-          <p class="text-gray-700 mb-2">Cijena: {{ proizvod.cijena }} kn</p>
+          <p class="text-gray-700 mb-2">Cijena: €{{ proizvod.cijena }}</p>
           <p class="text-gray-600">
             Veličine:
             <span v-if="Array.isArray(proizvod.velicine)">
@@ -66,12 +77,14 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import axios from "axios";
+import { useRouter } from "vue-router";
 
 const proizvodi = ref([]);
 const loading = ref(false);
 const error = ref(null);
+const router = useRouter();
 
 const fetchProizvodi = async () => {
   loading.value = true;
@@ -90,4 +103,38 @@ const fetchProizvodi = async () => {
 onMounted(() => {
   fetchProizvodi();
 });
+
+const cart = ref([]);
+onMounted(() => {
+  const storedCart = JSON.parse(sessionStorage.getItem("cart")) || [];
+  cart.value = storedCart;
+});
+
+const cartCount = computed(() =>
+  cart.value.reduce((total, item) => total + item.quantity, 0)
+);
+
+const naručiProizvode = async () => {
+  if (cart.value.length === 0) return;
+  try {
+    const response = await axios.post("http://localhost:3000/narudzbe", {
+      naruceni_proizvodi: cart.value.map((item) => ({
+        id: item.id,
+        naziv: item.naziv,
+        cijena: item.cijena,
+        kolicina: item.quantity,
+        dostupne_boje: item.dostupne_boje,
+        karakteristike: item.karakteristike,
+      })),
+    });
+    console.log("Narudžba uspješna:", response.data);
+    sessionStorage.removeItem("cart");
+    cart.value = [];
+    alert("Vaša narudžba je uspješno poslana!");
+    router.push("/proizvodi");
+  } catch (error) {
+    console.error("Greška prilikom slanja narudžbe:", error);
+    alert("Došlo je do greške prilikom slanja narudžbe. Pokušajte ponovno.");
+  }
+};
 </script>

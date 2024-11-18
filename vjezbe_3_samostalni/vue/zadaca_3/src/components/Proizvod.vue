@@ -40,16 +40,21 @@ let podaci = ref({
   ],
 });
 
-const posaljiNarudzbu = async () => {
-  try {
-    let response = await axios.post(
-      "http://localhost:3000/narudzbe",
-      podaci.value
-    );
-    console.log(response);
-  } catch (error) {
-    console.error("Greška u dohvatu podataka: ", error);
+const posaljiNarudzbu = (event) => {
+  event.preventDefault();
+
+  let cart = JSON.parse(sessionStorage.getItem("cart")) || [];
+
+  const existingProduct = cart.find((item) => item.id === proizvod.value.id);
+  if (existingProduct) {
+    existingProduct.quantity += 1;
+  } else {
+    cart.push({ ...proizvod.value, quantity: 1 });
   }
+
+  sessionStorage.setItem("cart", JSON.stringify(cart));
+
+  router.push("/proizvodi");
 };
 </script>
 <template>
@@ -147,7 +152,7 @@ flat."
             {{ proizvod.cijena }}€
           </p>
 
-          <form class="mt-10">
+          <form class="mt-10" @submit="posaljiNarudzbu">
             <!-- Colors -->
             <div class="mt-6">
               <h3 class="text-sm font-medium text-gray-900">Dostupne Boje</h3>
@@ -192,7 +197,6 @@ flat."
 
             <button
               type="submit"
-              @click="posaljiNarudzbu"
               class="mt-10 flex w-full items-center justify-center rounded-md border bordertransparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
             >
               Dodaj u košaricu
