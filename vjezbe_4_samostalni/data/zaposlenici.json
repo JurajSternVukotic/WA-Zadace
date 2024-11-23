@@ -19,5 +19,19 @@
     "prezime": "Babić",
     "godine_staža": 10,
     "pozicija": "Voditelj"
+  },
+  {
+    "id": 3,
+    "ime": "Petra",
+    "prezime": "Novak",
+    "godine_staža": 4,
+    "pozicija": "Direktor"
+  },
+  {
+    "id": 4,
+    "ime": "Marko",
+    "prezime": "Marin",
+    "godine_staža": 5,
+    "pozicija": "Programer"
   }
 ]
