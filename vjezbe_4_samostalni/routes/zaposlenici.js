@@ -35,7 +35,57 @@ const validateZaposlenik = (zaposlenik) => {
 
 router.get("/", async (req, res) => {
   try {
-    const zaposlenici = await readZaposlenici();
+    let zaposlenici = await readZaposlenici();
+
+    const {
+      sortiraj_po_godinama,
+      pozicija,
+      godine_staža_min,
+      godine_staža_max,
+    } = req.query;
+
+    if (pozicija) {
+      zaposlenici = zaposlenici.filter(
+        (z) => z.pozicija.toLowerCase() === pozicija.toLowerCase()
+      );
+    }
+
+    if (godine_staža_min !== undefined) {
+      const min = parseInt(godine_staža_min, 10);
+      if (isNaN(min) || min < 0) {
+        return res.status(400).json({
+          message: "Godina staža min mora biti pozitivan broj!",
+        });
+      }
+      zaposlenici = zaposlenici.filter((z) => z.godine_staža >= min);
+    }
+
+    if (godine_staža_max !== undefined) {
+      const max = parseInt(godine_staža_max, 10);
+      if (isNaN(max) || max < 0) {
+        return res.status(400).json({
+          message: "Godina staža max mora biti pozitivan broj!",
+        });
+      }
+      zaposlenici = zaposlenici.filter((z) => z.godine_staža <= max);
+    }
+
+    if (sortiraj_po_godinama) {
+      if (sortiraj_po_godinama !== "asc" && sortiraj_po_godinama !== "desc") {
+        return res.status(400).json({
+          message: "Sortiraj po godinama mora biti asc ili desc",
+        });
+      }
+
+      zaposlenici.sort((a, b) => {
+        if (sortiraj_po_godinama === "asc") {
+          return a.godine_staža - b.godine_staža;
+        } else {
+          return b.godine_staža - a.godine_staža;
+        }
+      });
+    }
+
     res.status(200).json(zaposlenici);
   } catch (error) {
     res.status(500).json({ message: "Greška prilikom dohvata zaposlenika." });
