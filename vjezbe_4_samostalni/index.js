@@ -10,3 +10,6 @@ app.listen(PORT, (error) => {
     console.log(`Server dela na http://localhost:${PORT}`);
   }
 });
+
+import zaposleniciRouter from "./routes/zaposlenici.js";
+app.use("/zaposlenici", zaposleniciRouter);
