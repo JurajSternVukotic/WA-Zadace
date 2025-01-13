@@ -14,4 +14,4 @@ app.listen(PORT, (error) => {
 import moviesRouter from "./routes/movies.js";
 app.use("/movies", moviesRouter);
 import actorsRouter from "./routes/actors.js";
-app.use("/actors", moviesRouter);
+app.use("/actors", actorsRouter);
