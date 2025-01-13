@@ -10,3 +10,8 @@ app.listen(PORT, (error) => {
     console.log(`Server dela na http://localhost:${PORT}`);
   }
 });
+
+import moviesRouter from "./routes/movies.js";
+app.use("/movies", moviesRouter);
+import actorsRouter from "./routes/actors.js";
+app.use("/actors", moviesRouter);
