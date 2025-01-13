@@ -36,7 +36,8 @@ export const validateAndSanitizeName = [
     .withMessage("Name must be a valid string.")
     .matches(/^[a-zA-Z\s]+$/)
     .withMessage("Name must contain only letters and spaces.")
-    .trim(),
+    .trim()
+    .escape(),
 
   (req, res, next) => {
     const errors = validationResult(req);
@@ -48,12 +49,13 @@ export const validateAndSanitizeName = [
 ];
 
 export const validateActor = [
-  body("name").notEmpty().withMessage("Name is required."),
+  body("name").notEmpty().withMessage("Name is required.").escape(),
   body("birthYear")
     .isInt()
     .withMessage("BirthYear must be an integer.")
     .notEmpty()
-    .withMessage("BirthYear is required."),
+    .withMessage("BirthYear is required.")
+    .escape(),
 
   (req, res, next) => {
     const errors = validationResult(req);

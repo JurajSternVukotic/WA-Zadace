@@ -34,13 +34,15 @@ export const validateYearRange = [
     .optional()
     .isInt()
     .withMessage("min_year must be an integer.")
-    .toInt(),
+    .toInt()
+    .escape(),
 
   query("max_year")
     .optional()
     .isInt()
     .withMessage("max_year must be an integer.")
-    .toInt(),
+    .toInt()
+    .escape(),
 
   (req, res, next) => {
     const { min_year, max_year } = req.query;
@@ -70,14 +72,15 @@ export const validateYearRange = [
 ];
 
 export const validateMovie = [
-  body("title").notEmpty().withMessage("Title is required."),
+  body("title").notEmpty().withMessage("Title is required.").escape(),
   body("year")
     .isInt()
     .withMessage("Year must be an integer.")
     .notEmpty()
-    .withMessage("Year is required."),
-  body("genre").notEmpty().withMessage("Genre is required."),
-  body("director").notEmpty().withMessage("Director is required."),
+    .withMessage("Year is required.")
+    .escape(),
+  body("genre").notEmpty().withMessage("Genre is required.").escape(),
+  body("director").notEmpty().withMessage("Director is required.").escape(),
 
   (req, res, next) => {
     const errors = validationResult(req);
