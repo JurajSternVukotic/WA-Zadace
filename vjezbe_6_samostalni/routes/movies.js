@@ -18,7 +18,22 @@ router.get("/", async (req, res) => {
     res.status(500).json({ error: "Error reading movies." });
   }
 });
-router.get("/:id", async (req, res) => {});
+
+router.get("/:id", async (req, res) => {
+  try {
+    const movieId = parseInt(req.params.id, 10);
+    const movies = await readMoviesFile();
+
+    const movie = movies.find((m) => m.id === movieId);
+    if (!movie) {
+      return res.status(404).json({ error: "Movie not found" });
+    }
+    res.json(movie);
+  } catch (error) {
+    res.status(500).json({ error: "Error reading movies." });
+  }
+});
+
 router.post("/", async (req, res) => {});
 router.patch("/", async (req, res) => {});
 
