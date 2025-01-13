@@ -1,6 +1,11 @@
 import express from "express";
+import logger from "./middleware/logger.js";
+import moviesRouter from "./routes/movies.js";
+import actorsRouter from "./routes/actors.js";
+
 const app = express();
 app.use(express.json());
+app.use(logger("vjezbe_6_samostalni"));
 const PORT = 3000;
 
 app.listen(PORT, (error) => {
@@ -11,7 +16,5 @@ app.listen(PORT, (error) => {
   }
 });
 
-import moviesRouter from "./routes/movies.js";
 app.use("/movies", moviesRouter);
-import actorsRouter from "./routes/actors.js";
 app.use("/actors", actorsRouter);

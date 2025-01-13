@@ -2,6 +2,12 @@ import express from "express";
 const router = express.Router();
 import fs from "fs/promises";
 import path from "path";
+import {
+  validateMovieById,
+  validateId,
+  validateYearRange,
+  validateMovie,
+} from "../middleware/movies.js";
 
 const dataPath = path.join(process.cwd(), "data", "movies.json");
 
@@ -17,38 +23,31 @@ let movies = [];
     movies = [];
   }
 })();
+const getMovies = () => movies;
 
-router.get("/", async (req, res) => {
-  try {
-    res.json(movies);
-  } catch (error) {
-    res.status(500).json({ error: "Error reading movies in memory." });
+router.get("/", validateYearRange, (req, res) => {
+  const { min_year, max_year } = req.query;
+
+  let filteredMovies = movies;
+
+  if (min_year !== undefined) {
+    filteredMovies = filteredMovies.filter((movie) => movie.year >= min_year);
   }
+
+  if (max_year !== undefined) {
+    filteredMovies = filteredMovies.filter((movie) => movie.year <= max_year);
+  }
+
+  res.json(filteredMovies);
 });
 
-router.get("/:id", async (req, res) => {
-  try {
-    const movieId = parseInt(req.params.id, 10);
-    const movie = movies.find((m) => m.id === movieId);
-
-    if (!movie) {
-      return res.status(404).json({ error: "Movie not found" });
-    }
-    res.json(movie);
-  } catch (error) {
-    res.status(500).json({ error: "Error retrieving the movie from memory." });
-  }
+router.get("/:id", validateId, validateMovieById(getMovies), (req, res) => {
+  res.json(req.movie);
 });
 
-router.post("/", async (req, res) => {
+router.post("/", validateMovie, (req, res) => {
   try {
     const { id, title, year, genre, director } = req.body;
-
-    if (!id || !title || !year || !genre || !director) {
-      return res.status(400).json({
-        error: "All fields (id, title, year, genre, director) are required.",
-      });
-    }
 
     if (movies.some((m) => m.id === id)) {
       return res
@@ -65,7 +64,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.patch("/:id", async (req, res) => {
+router.patch("/:id", validateMovie, (req, res) => {
   try {
     const movieId = parseInt(req.params.id, 10);
     const movieIndex = movies.findIndex((m) => m.id === movieId);
@@ -86,4 +85,5 @@ router.patch("/:id", async (req, res) => {
     res.status(500).json({ error: "Error updating the movie in memory." });
   }
 });
+
 export default router;

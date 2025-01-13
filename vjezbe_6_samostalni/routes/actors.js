@@ -2,6 +2,12 @@ import express from "express";
 const router = express.Router();
 import fs from "fs/promises";
 import path from "path";
+import {
+  validateActorById,
+  validateActor,
+  validateAndSanitizeName,
+  validateId,
+} from "../middleware/actors.js";
 
 const dataPath = path.join(process.cwd(), "data", "actors.json");
 let actors = [];
@@ -16,38 +22,28 @@ let actors = [];
     actors = [];
   }
 })();
+const getActors = () => actors;
 
-router.get("/", async (req, res) => {
-  try {
-    res.json(actors);
-  } catch (error) {
-    res.status(500).json({ error: "Error reading actors in memory." });
+router.get("/", validateAndSanitizeName, (req, res) => {
+  const { name } = req.query;
+
+  if (name) {
+    const filteredActors = actors.filter((actor) =>
+      actor.name.toLowerCase().includes(name.toLowerCase())
+    );
+    return res.json(filteredActors);
   }
+
+  res.json(actors);
 });
 
-router.get("/:id", async (req, res) => {
-  try {
-    const actorId = parseInt(req.params.id, 10);
-    const actor = actors.find((a) => a.id === actorId);
-
-    if (!actor) {
-      return res.status(404).json({ error: "Actor not found" });
-    }
-    res.json(actor);
-  } catch (error) {
-    res.status(500).json({ error: "Error retrieving the actor from memory." });
-  }
+router.get("/:id", validateId, validateActorById(getActors), (req, res) => {
+  res.json(req.actor);
 });
 
-router.post("/", async (req, res) => {
+router.post("/", validateActor, (req, res) => {
   try {
     const { id, name, birthYear, movies: actorMovies } = req.body;
-
-    if (!id || !name || !birthYear || !actorMovies) {
-      return res.status(400).json({
-        error: "All fields (id, name, birthYear, movies) are required.",
-      });
-    }
 
     if (actors.some((a) => a.id === id)) {
       return res
@@ -55,12 +51,7 @@ router.post("/", async (req, res) => {
         .json({ error: `Actor with id=${id} already exists.` });
     }
 
-    const newActor = {
-      id,
-      name,
-      birthYear,
-      movies: actorMovies,
-    };
+    const newActor = { id, name, birthYear, movies: actorMovies };
     actors.push(newActor);
 
     return res.status(201).json(newActor);
@@ -69,7 +60,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.patch("/:id", async (req, res) => {
+router.patch("/:id", validateActor, (req, res) => {
   try {
     const actorId = parseInt(req.params.id, 10);
     const actorIndex = actors.findIndex((a) => a.id === actorId);
@@ -79,6 +70,7 @@ router.patch("/:id", async (req, res) => {
     }
 
     const { name, birthYear, movies: actorMovies } = req.body;
+
     if (name !== undefined) actors[actorIndex].name = name;
     if (birthYear !== undefined) actors[actorIndex].birthYear = birthYear;
     if (actorMovies !== undefined) actors[actorIndex].movies = actorMovies;
